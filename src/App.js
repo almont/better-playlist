@@ -79,6 +79,8 @@ class App extends Component {
   componentDidMount() {
     let parsed = queryString.parse(window.location.search)
     let accessToken = parsed.access_token
+
+    if (!accessToken) return
     
     fetch('https://api.spotify.com/v1/me', {headers: {'Authorization': 'Bearer ' + accessToken}})
       .then((response) => response.json())
@@ -130,7 +132,11 @@ class App extends Component {
                 )
               }
             </div>
-          : <button onClick={() => window.location = 'http://localhost:8888/login'} style={{padding: '20px', marginTop: '20px', fontSize: '50px'}}>Sign in with Spotify</button>
+          : <button onClick={() => {
+              window.location = window.location.href.includes('localhost') 
+                ? 'http://localhost:8888/login'
+                : 'https://andre-better-playlist-backend.herokuapp.com/login'
+            }} style={{padding: '20px', marginTop: '20px', fontSize: '50px'}}>Sign in with Spotify</button>
         }
       </div>
     )
